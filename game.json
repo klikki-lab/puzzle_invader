@@ -254,8 +254,8 @@
 		"img_description_02": {
 			"type": "image",
 			"path": "image/img_description_02.png",
-			"width": 854,
-			"height": 203
+			"width": 724,
+			"height": 204
 		},
 		"se_switch04": {
 			"type": "audio",
