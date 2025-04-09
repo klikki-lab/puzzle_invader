@@ -1,0 +1,450 @@
+{
+	"width": 1280,
+	"height": 720,
+	"fps": 60,
+	"maxPoints": 1,
+	"main": "./script/_bootstrap.js",
+	"assets": {
+		"img_alien": {
+			"type": "image",
+			"path": "image/img_alien.png",
+			"width": 192,
+			"height": 48
+		},
+		"img_alien_arm": {
+			"type": "image",
+			"path": "image/img_alien_arm.png",
+			"width": 42,
+			"height": 18
+		},
+		"img_alien_leg": {
+			"type": "image",
+			"path": "image/img_alien_leg.png",
+			"width": 42,
+			"height": 10
+		},
+		"img_tile": {
+			"type": "image",
+			"path": "image/img_tile.png",
+			"width": 576,
+			"height": 96
+		},
+		"img_bullet": {
+			"type": "image",
+			"path": "image/img_bullet.png",
+			"width": 114,
+			"height": 64
+		},
+		"img_splash": {
+			"type": "image",
+			"path": "image/img_splash.png",
+			"width": 182,
+			"height": 36
+		},
+		"img_spray": {
+			"type": "image",
+			"path": "image/img_spray.png",
+			"width": 28,
+			"height": 8
+		},
+		"img_destroy": {
+			"type": "image",
+			"path": "image/img_destroy.png",
+			"width": 96,
+			"height": 32
+		},
+		"img_button_fire": {
+			"type": "image",
+			"path": "image/img_button_fire.png",
+			"width": 580,
+			"height": 162
+		},
+		"img_monolith": {
+			"type": "image",
+			"path": "image/img_monolith.png",
+			"width": 294,
+			"height": 96
+		},
+		"audioController": {
+			"type": "script",
+			"path": "script/common/audioController.js",
+			"global": true
+		},
+		"button": {
+			"type": "script",
+			"path": "script/common/button.js",
+			"global": true
+		},
+		"countdownTimer": {
+			"type": "script",
+			"path": "script/common/countdownTimer.js",
+			"global": true
+		},
+		"customLoadingScene": {
+			"type": "script",
+			"path": "script/common/customLoadingScene.js",
+			"global": true
+		},
+		"attempter": {
+			"type": "script",
+			"path": "script/game_scene/attempter.js",
+			"global": true
+		},
+		"star": {
+			"type": "script",
+			"path": "script/game_scene/background/star.js",
+			"global": true
+		},
+		"color": {
+			"type": "script",
+			"path": "script/game_scene/color.js",
+			"global": true
+		},
+		"explosion": {
+			"type": "script",
+			"path": "script/game_scene/effect/explosion.js",
+			"global": true
+		},
+		"splash": {
+			"type": "script",
+			"path": "script/game_scene/effect/splash.js",
+			"global": true
+		},
+		"gameScene": {
+			"type": "script",
+			"path": "script/game_scene/gameScene.js",
+			"global": true
+		},
+		"scoreLabel": {
+			"type": "script",
+			"path": "script/game_scene/hud/scoreLabel.js",
+			"global": true
+		},
+		"timeLabel": {
+			"type": "script",
+			"path": "script/game_scene/hud/timeLabel.js",
+			"global": true
+		},
+		"alien": {
+			"type": "script",
+			"path": "script/game_scene/invader/alien.js",
+			"global": true
+		},
+		"invaderLayer": {
+			"type": "script",
+			"path": "script/game_scene/invader/invaderLayer.js",
+			"global": true
+		},
+		"monolith": {
+			"type": "script",
+			"path": "script/game_scene/invader/monolith.js",
+			"global": true
+		},
+		"tile": {
+			"type": "script",
+			"path": "script/game_scene/tile/tile.js",
+			"global": true
+		},
+		"tileLayer": {
+			"type": "script",
+			"path": "script/game_scene/tile/tileLayer.js",
+			"global": true
+		},
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"parameterObject": {
+			"type": "script",
+			"path": "script/parameterObject.js",
+			"global": true
+		},
+		"_bootstrap": {
+			"type": "script",
+			"path": "script/_bootstrap.js",
+			"global": true
+		},
+		"img_font": {
+			"type": "image",
+			"path": "image/img_font.png",
+			"width": 624,
+			"height": 192
+		},
+		"font_glyphs": {
+			"type": "text",
+			"path": "text/font_glyphs.json"
+		},
+		"waveLabel": {
+			"type": "script",
+			"path": "script/game_scene/hud/waveLabel.js",
+			"global": true
+		},
+		"background": {
+			"type": "script",
+			"path": "script/game_scene/background/background.js",
+			"global": true
+		},
+		"spray": {
+			"type": "script",
+			"path": "script/game_scene/effect/spray.js",
+			"global": true
+		},
+		"difficultyLabel": {
+			"type": "script",
+			"path": "script/game_scene/hud/difficultyLabel.js",
+			"global": true
+		},
+		"bullet": {
+			"type": "script",
+			"path": "script/game_scene/tile/bullet.js",
+			"global": true
+		},
+		"perfectBonus": {
+			"type": "script",
+			"path": "script/game_scene/perfectBonus.js",
+			"global": true
+		},
+		"img_finish": {
+			"type": "image",
+			"path": "image/img_finish.png",
+			"width": 318,
+			"height": 96
+		},
+		"img_start": {
+			"type": "image",
+			"path": "image/img_start.png",
+			"width": 304,
+			"height": 96
+		},
+		"img_loading": {
+			"type": "image",
+			"path": "image/img_loading.png",
+			"width": 140,
+			"height": 96
+		},
+		"titleScene": {
+			"type": "script",
+			"path": "script/title_scene/titleScene.js",
+			"global": true
+		},
+		"img_title_logo": {
+			"type": "image",
+			"path": "image/img_title_logo.png",
+			"width": 143,
+			"height": 32
+		},
+		"img_button_start": {
+			"type": "image",
+			"path": "image/img_button_start.png",
+			"width": 578,
+			"height": 162
+		},
+		"baseScene": {
+			"type": "script",
+			"path": "script/common/baseScene.js",
+			"global": true
+		},
+		"img_description_01": {
+			"type": "image",
+			"path": "image/img_description_01.png",
+			"width": 970,
+			"height": 75
+		},
+		"img_description_02": {
+			"type": "image",
+			"path": "image/img_description_02.png",
+			"width": 854,
+			"height": 203
+		},
+		"se_switch04": {
+			"type": "audio",
+			"path": "audio/se_switch04",
+			"systemId": "sound",
+			"duration": 366,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_kotsun01": {
+			"type": "audio",
+			"path": "audio/se_kotsun01",
+			"systemId": "sound",
+			"duration": 262,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_suitsuku01": {
+			"type": "audio",
+			"path": "audio/se_suitsuku01",
+			"systemId": "sound",
+			"duration": 105,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_beam05": {
+			"type": "audio",
+			"path": "audio/se_beam05",
+			"systemId": "sound",
+			"duration": 471,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_bunnn1": {
+			"type": "audio",
+			"path": "audio/se_bunnn1",
+			"systemId": "sound",
+			"duration": 504,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_bubble_pop02": {
+			"type": "audio",
+			"path": "audio/se_bubble_pop02",
+			"systemId": "sound",
+			"duration": 183,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_down3": {
+			"type": "audio",
+			"path": "audio/se_down3",
+			"systemId": "sound",
+			"duration": 1098,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_powerup14": {
+			"type": "audio",
+			"path": "audio/se_powerup14",
+			"systemId": "sound",
+			"duration": 1725,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"img_loading_now": {
+			"type": "image",
+			"path": "image/img_loading_now.png",
+			"width": 132,
+			"height": 32
+		},
+		"se_water_monster03": {
+			"type": "audio",
+			"path": "audio/se_water_monster03",
+			"systemId": "sound",
+			"duration": 951,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_pikon22": {
+			"type": "audio",
+			"path": "audio/se_pikon22",
+			"systemId": "sound",
+			"duration": 236,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_push_start01": {
+			"type": "audio",
+			"path": "audio/se_push_start01",
+			"systemId": "sound",
+			"duration": 1644,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"se_texiyuuuun": {
+			"type": "audio",
+			"path": "audio/se_texiyuuuun",
+			"systemId": "sound",
+			"duration": 1751,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"nc227381_edited": {
+			"type": "audio",
+			"path": "audio/nc227381_edited",
+			"systemId": "music",
+			"duration": 105934,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			}
+		},
+		"img_monolith_message": {
+			"type": "image",
+			"path": "image/img_monolith_message.png",
+			"width": 243,
+			"height": 47
+		}
+	},
+	"moduleMainScripts": {
+		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+	},
+	"environment": {
+		"sandbox-runtime": "3",
+		"nicolive": {
+			"supportedModes": [
+				"ranking"
+			],
+			"preferredSessionParameters": {
+				"totalTimeLimit": 140
+			}
+		}
+	},
+	"globalScripts": [
+		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+	]
+}
