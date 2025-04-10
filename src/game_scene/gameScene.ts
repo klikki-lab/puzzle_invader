@@ -67,7 +67,7 @@ export class GameScene extends BaseScene<void> {
 
     private shouldShowHint = false;
     /** ショットを無効にすべきかどうか (ゲーム終了後は true) */
-    private shouldShootingDisable = false;
+    private disableShooting = false;
 
     constructor(param: GameMainParameterObject, isTouched: boolean, timeLimit: number) {
         super({
@@ -144,11 +144,6 @@ export class GameScene extends BaseScene<void> {
         const margin = 2; // 念のために余裕を設けておく 
         const elapsed = Math.floor(g.game.age / g.game.fps);
         const duration = (this.totalTimeLimit - elapsed - margin) * 1000;
-        const volume = this.audioController.getMusicVolume(MusicId.BGM);
-        // const easing = (t: number, _b: number, _c: number, d: number) => {
-        //     const v = 1 - (t / d);
-        //     return v * v * v * volume;
-        // };
         this.audioController.fadeOutMusic(MusicId.BGM, Math.max(1, duration));
 
         const finish = this.createSprite("img_finish");
@@ -360,7 +355,7 @@ export class GameScene extends BaseScene<void> {
     }
 
     private showShootingResult = (onFinishAnim: () => void): void => {
-        if (this.shouldShootingDisable) {
+        if (this.disableShooting) {
             onFinishAnim();
             return;
         }
@@ -475,17 +470,16 @@ export class GameScene extends BaseScene<void> {
         button.x = right + (g.game.width - right) / 2 - button.width / 2;
         button.opacity = 0.9;
         button.hide();
-        button.onPressed = (_button => {
-            this.audioController.playSound(SoundId.CLICK);
-        });
+        button.onPressed = (_button => this.audioController.playSound(SoundId.CLICK));
         button.onClick = (button => {
             if (!this.tiles.isSwiping && !this.tiles.isActivate) {
                 this.audioController.playSound(SoundId.CLICK);
-                // this.audioController.playSE(SoundId.SHOT);
+
                 button.hide();
                 this.tiles.isActivate = true;
-                if (!this.shouldShootingDisable && this.countdownTimer.isFinish()) {
-                    this.shouldShootingDisable = true;
+                // 時間終了までにクリックすれば、そのショットは有効
+                if (!this.disableShooting && this.countdownTimer.isFinish()) {
+                    this.disableShooting = true;
                 }
                 this.startShooting();
             }
