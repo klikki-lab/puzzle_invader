@@ -3,8 +3,6 @@ import { Alien } from "./alien";
 import { Invader } from "./invader";
 import { Monolith } from "./monolith";
 
-export type InvaderOrUndefined = Invader | undefined;
-
 type Rotation = "horizontal" | "vertical";
 
 type SolutionStep = {
@@ -71,10 +69,11 @@ export class InvaderLayer extends g.E {
         colorTable: number[][],
         random: g.RandomGenerator,
         isMonolithTurn: boolean,
-        rotationAttempts: number): { invaders: (Alien | Monolith)[][], rotateResult: RotateResult } => {
+        rotationAttempts: number): { invaders: Invader[][], rotateResult: RotateResult } => {
 
-        const result = this.rotate(colorTable, random, rotationAttempts);
         this._isMonolithTurn = isMonolithTurn;
+        const result = this.rotate(colorTable, random, rotationAttempts);
+
         const invaders = this.getInvaders();
         invaders.forEach((row, rowIndex) => {
             row.forEach((invader, columnIndex) => {
@@ -93,9 +92,9 @@ export class InvaderLayer extends g.E {
         }
     };
 
-    isAllDestroyed = (): boolean => this.getDestroyCount() === TileLayer.ROW * TileLayer.COLUMN;
+    isAllDefeated = (): boolean => this.getDefeatCount() === TileLayer.ROW * TileLayer.COLUMN;
 
-    getDestroyCount = (): number => {
+    getDefeatCount = (): number => {
         let count = 0;
         const invaders = this.getInvaders();
         for (const row of invaders) {
@@ -106,7 +105,7 @@ export class InvaderLayer extends g.E {
         return count;
     };
 
-    getVanguardInvaderOrUndefined = (columnIndex: number): InvaderOrUndefined => {
+    getVanguardInvaderOrUndefined = (columnIndex: number): (Invader | undefined) => {
         const current = this.getInvaders();
         for (let i = current.length - 1; i >= 0; i--) {
             if (!current[i][columnIndex].isDefeat())
@@ -115,7 +114,7 @@ export class InvaderLayer extends g.E {
         return undefined;
     };
 
-    getInvaders = (): (Alien | Monolith)[][] => this._isMonolithTurn ? this.monoliths : this.aliens;
+    getInvaders = (): Invader[][] => this._isMonolithTurn ? this.monoliths : this.aliens;
 
     getColors = (): number[][] => this.getInvaders().map(row => row.map(invader => invader.getColor()));
 
@@ -139,10 +138,8 @@ export class InvaderLayer extends g.E {
         };
 
         const solutionSteps: SolutionStep[] = [];
-        const rowLength = copy.length;
-        const columnLength = copy[0].length;
         const maxRetryTimes = 3;
-        // let rotationCount = 0;
+
         let retryCount = 0;
         let prevRowIndexes = shuffleIndexes(TileLayer.ROW);
         let prevColumnIndexes = shuffleIndexes(TileLayer.COLUMN);
@@ -162,20 +159,20 @@ export class InvaderLayer extends g.E {
             const rowRate = random.generate() * (prevRowIndexes.length / TileLayer.ROW);
             const columnlRate = random.generate() * (prevColumnIndexes.length / TileLayer.COLUMN);
             if (columnIndex < 0 || (rowIndex >= 0 && rowRate > columnlRate)) {
-                const rotation = Math.floor(random.generate() * (rowLength - 1)) + 1;
+                const rotation = Math.floor(random.generate() * (copy.length - 1)) + 1;
                 this.rotateHorizontal(copy, rowIndex, rotation);
-                // rotationCount++;
+
                 prevRowIndexes = prevRowIndexes.filter(index => index !== rowIndex);
-                if (prevColumnIndexes.length < 1) {
+                if (prevColumnIndexes.length <= 0) {
                     prevColumnIndexes = shuffleIndexes(TileLayer.COLUMN);
                 }
                 solutionSteps.push({ orientation: "horizontal", index: TileLayer.ROW - 1 - rowIndex, step: -rotation });
             } else {
-                const rotation = Math.floor(random.generate() * (columnLength - 1)) + 1;
+                const rotation = Math.floor(random.generate() * (copy[0].length - 1)) + 1;
                 this.rotateVertical(copy, columnIndex, rotation);
-                // rotationCount++;
+
                 prevColumnIndexes = prevColumnIndexes.filter(index => index !== columnIndex);
-                if (prevRowIndexes.length < 1) {
+                if (prevRowIndexes.length <= 0) {
                     prevRowIndexes = shuffleIndexes(TileLayer.ROW);
                 }
                 solutionSteps.push({ orientation: "vertical", index: columnIndex, step: rotation });
@@ -186,7 +183,8 @@ export class InvaderLayer extends g.E {
 
     private targetRowIndex = (src: number[][], prevRowIndexes: number[]): number => {
         for (const index of prevRowIndexes) {
-            if (!this.isHorizontalSameColor(src[index])) return index;
+            if (!this.isHorizontalSameColor(src[index]))
+                return index;
         }
         return -1;
     };
@@ -208,7 +206,8 @@ export class InvaderLayer extends g.E {
 
     private targetColumnIndex = (src: number[][], prevColumnIndexes: number[]): number => {
         for (const index of prevColumnIndexes) {
-            if (!this.isVerticalSameColor(src, index)) return index;
+            if (!this.isVerticalSameColor(src, index))
+                return index;
         }
         return -1;
     };
