@@ -44,6 +44,7 @@ export class GameScene extends BaseScene<void> {
 
     /** 333 ms */
     public static readonly ANIM_DURATION = Math.floor(1000 / TileLayer.ROW);
+    /** 48 px */
     public static readonly INVADERS_OFFSET_Y = BaseScene.SCREEN_PADDING * 1.25
 
     private random: g.RandomGenerator;
@@ -236,13 +237,16 @@ export class GameScene extends BaseScene<void> {
                                 } else if (tile.color === invader.getColor()) {
                                     const soundId = this.isMonolith(invader) ? SoundId.DESTROY_MONOLITH : SoundId.DESTROY;
                                     this.audioController.playSound(soundId);
-
                                     new Explosion(this, this.effectLayer, dest, tile.color);
                                     invader.defeat();
+
                                     this.timeline.create(invader)
-                                        .scaleTo(0, 0, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
-                                        .call(invader.hide);
-                                    this.attempter.correct();
+                                        .scaleTo(0, 0, GameScene.ANIM_DURATION / 3, tl.Easing.easeOutQuint)
+                                        .call(() => {
+                                            invader.hide();
+                                            this.attempter.correct();
+                                        });
+
                                 } else {
                                     this.audioController.playSound(SoundId.SPLASH);
                                     const pos = { x: dest.x, y: dest.y + invader.height / 2 };
@@ -272,10 +276,10 @@ export class GameScene extends BaseScene<void> {
             this.showShootingResult(() => {
                 this.audioController.playSound(SoundId.WARP);
                 this.background.startWarp();
-                this.waveLabel.nextWave();
                 this.tiles.isActivate = false;
 
                 this.invadeAnimation(solutionStep => {
+                    this.waveLabel.nextWave();
                     this.difficultyLabel.optimalMoveCount = solutionStep;
                     this.background.finishWarp();
                     this.prepareNextAttempt();
