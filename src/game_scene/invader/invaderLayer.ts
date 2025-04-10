@@ -116,6 +116,8 @@ export class InvaderLayer extends g.E {
 
     getInvaders = (): (Alien | Monolith)[][] => this._isMonolithTurn ? this.monoliths : this.aliens;
 
+    getColors = (): number[][] => this.getInvaders().map(row => row.map(invader => invader.color));
+
     get isMonolithTurn(): boolean { return this._isMonolithTurn; }
 
     private rotate = (src: number[][], random: g.RandomGenerator, rotationAttempts: number): RotateResult => {
