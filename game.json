@@ -220,8 +220,8 @@
 		"img_loading": {
 			"type": "image",
 			"path": "image/img_loading.png",
-			"width": 140,
-			"height": 96
+			"width": 96,
+			"height": 66
 		},
 		"titleScene": {
 			"type": "script",
@@ -338,8 +338,8 @@
 		"img_loading_now": {
 			"type": "image",
 			"path": "image/img_loading_now.png",
-			"width": 132,
-			"height": 32
+			"width": 96,
+			"height": 23
 		},
 		"se_water_monster03": {
 			"type": "audio",
