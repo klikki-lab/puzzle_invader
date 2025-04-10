@@ -12,8 +12,6 @@ export class Alien extends Invader {
         this.createLegs(scene, color);
     }
 
-    // override getColor(): number { return super.getColor(); }
-
     override setColor(color: number) {
         super.setColor(color);
 
