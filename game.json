@@ -228,12 +228,6 @@
 			"path": "script/title_scene/titleScene.js",
 			"global": true
 		},
-		"img_title_logo": {
-			"type": "image",
-			"path": "image/img_title_logo.png",
-			"width": 143,
-			"height": 32
-		},
 		"img_button_start": {
 			"type": "image",
 			"path": "image/img_button_start.png",
@@ -244,18 +238,6 @@
 			"type": "script",
 			"path": "script/common/baseScene.js",
 			"global": true
-		},
-		"img_description_01": {
-			"type": "image",
-			"path": "image/img_description_01.png",
-			"width": 970,
-			"height": 75
-		},
-		"img_description_02": {
-			"type": "image",
-			"path": "image/img_description_02.png",
-			"width": 724,
-			"height": 204
 		},
 		"se_switch04": {
 			"type": "audio",
@@ -424,6 +406,23 @@
 			"path": "image/img_monolith_message.png",
 			"width": 243,
 			"height": 47
+		},
+		"img_description": {
+			"type": "image",
+			"path": "image/img_description.png",
+			"width": 361,
+			"height": 426
+		},
+		"arrayUtil": {
+			"type": "script",
+			"path": "script/common/arrayUtil.js",
+			"global": true
+		},
+		"img_equals": {
+			"type": "image",
+			"path": "image/img_equals.png",
+			"width": 142,
+			"height": 96
 		}
 	},
 	"moduleMainScripts": {
