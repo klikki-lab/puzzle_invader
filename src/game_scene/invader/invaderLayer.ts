@@ -79,6 +79,7 @@ export class InvaderLayer extends g.E {
             row.forEach((invader, columnIndex) => {
                 invader.scale(1);
                 invader.opacity = 1.0;
+                invader.modified();
                 invader.setColor(result.colors[rowIndex][columnIndex]);
             });
         });
