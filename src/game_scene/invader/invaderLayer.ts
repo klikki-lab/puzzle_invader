@@ -79,7 +79,7 @@ export class InvaderLayer extends g.E {
             row.forEach((invader, columnIndex) => {
                 invader.scale(1);
                 invader.opacity = 1.0;
-                invader.color = result.colors[rowIndex][columnIndex];
+                invader.setColor(result.colors[rowIndex][columnIndex]);
             });
         });
         return { invaders: invaders, rotateResult: result };
@@ -116,7 +116,7 @@ export class InvaderLayer extends g.E {
 
     getInvaders = (): (Alien | Monolith)[][] => this._isMonolithTurn ? this.monoliths : this.aliens;
 
-    getColors = (): number[][] => this.getInvaders().map(row => row.map(invader => invader.color));
+    getColors = (): number[][] => this.getInvaders().map(row => row.map(invader => invader.getColor()));
 
     get isMonolithTurn(): boolean { return this._isMonolithTurn; }
 

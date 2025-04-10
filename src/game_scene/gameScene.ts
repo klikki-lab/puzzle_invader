@@ -83,6 +83,7 @@ export class GameScene extends BaseScene<void> {
             ],
         });
 
+        this.enableRightClickScreenshot();
         this.random = param.random || g.game.random;
         this.totalTimeLimit = param.sessionParameter?.totalTimeLimit ?? 80;
         this.onLoad.add(() => this.loadHandler(timeLimit, isTouched));
@@ -231,12 +232,15 @@ export class GameScene extends BaseScene<void> {
                                 bullet.destroy();
                                 if (!invader) {
                                     this.attempter.incorrect();
-                                } else if (tile.color === invader.color) {
+                                } else if (tile.color === invader.getColor()) {
                                     const soundId = this.isMonolith(invader) ? SoundId.DESTROY_MONOLITH : SoundId.DESTROY;
                                     this.audioController.playSound(soundId);
 
                                     new Explosion(this, this.effectLayer, dest, tile.color);
                                     invader.defeat();
+                                    this.timeline.create(invader)
+                                        .scaleTo(0, 0, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
+                                        .call(invader.hide);
                                     this.attempter.correct();
                                 } else {
                                     this.audioController.playSound(SoundId.SPLASH);

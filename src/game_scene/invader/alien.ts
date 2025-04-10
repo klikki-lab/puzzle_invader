@@ -1,38 +1,21 @@
 import { TileLayer } from "../tile/tileLayer";
+import { Invader } from "./invader";
 
-export class Alien extends g.Sprite {
+export class Alien extends Invader {
 
     private static readonly ANIM_PERIOD = Math.floor(g.game.fps * 0.84);
-    private _isDefeat = false;
 
-    constructor(scene: g.Scene, private _color: number) {
-        const src = scene.asset.getImageById("img_alien");
-        super({
-            scene: scene,
-            src: src,
-            width: Math.floor(src.width / TileLayer.DIVISION),
-            anchorX: 0.5,
-            anchorY: 0.5,
-        });
-        this.color = _color;
+    constructor(scene: g.Scene, color: number) {
+        super(scene, "img_alien", color);
 
-        this.createArms(scene, _color);
-        this.createLegs(scene, _color);
+        this.createArms(scene, color);
+        this.createLegs(scene, color);
     }
 
-    isDefeat = (): boolean => this._isDefeat;
+    // override getColor(): number { return super.getColor(); }
 
-    defeat = (): void => {
-        this._isDefeat = true;
-        this.hide();
-    }
-
-    get color(): number { return this._color; }
-
-    set color(color: number) {
-        this._color = color;
-        this.srcX = color * this.width;
-        this.invalidate();
+    override setColor(color: number) {
+        super.setColor(color);
 
         this.children?.forEach(e => {
             if (!(e instanceof g.Sprite)) return;
@@ -40,11 +23,6 @@ export class Alien extends g.Sprite {
             e.srcX = color * e.width;
             e.invalidate();
         });
-    }
-
-    override show(): void {
-        this._isDefeat = false;
-        super.show();
     }
 
     private createArms = (scene: g.Scene, color: number): void => {

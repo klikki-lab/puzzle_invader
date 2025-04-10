@@ -423,6 +423,11 @@
 			"path": "image/img_equals.png",
 			"width": 142,
 			"height": 96
+		},
+		"invader": {
+			"type": "script",
+			"path": "script/game_scene/invader/invader.js",
+			"global": true
 		}
 	},
 	"moduleMainScripts": {
