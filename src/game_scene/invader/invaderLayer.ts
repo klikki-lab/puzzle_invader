@@ -1,8 +1,9 @@
 import { TileLayer } from "../tile/tileLayer";
 import { Alien } from "./alien";
+import { Invader } from "./invader";
 import { Monolith } from "./monolith";
 
-export type Invader = Alien | Monolith | undefined;
+export type InvaderOrUndefined = Invader | undefined;
 
 type Rotation = "horizontal" | "vertical";
 
@@ -105,7 +106,7 @@ export class InvaderLayer extends g.E {
         return count;
     };
 
-    getVanguardInvaderOrUndefined = (columnIndex: number): Invader => {
+    getVanguardInvaderOrUndefined = (columnIndex: number): InvaderOrUndefined => {
         const current = this.getInvaders();
         for (let i = current.length - 1; i >= 0; i--) {
             if (!current[i][columnIndex].isDefeat())

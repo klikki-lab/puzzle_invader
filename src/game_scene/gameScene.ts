@@ -14,7 +14,7 @@ import { DifficultyLabel } from "./hud/difficultyLabel";
 import { ScoreLabel } from "./hud/scoreLabel";
 import { TimeLabel } from "./hud/timeLabel";
 import { WaveLabel } from "./hud/waveLabel";
-import { Invader, InvaderLayer } from "./invader/invaderLayer";
+import { InvaderLayer, InvaderOrUndefined } from "./invader/invaderLayer";
 import { Monolith } from "./invader/monolith";
 import { PerfectBonus } from "./perfectBonus";
 import { Bullet } from "./tile/bullet";
@@ -264,7 +264,7 @@ export class GameScene extends BaseScene<void> {
         });
     };
 
-    private isMonolith = (invader: Invader): boolean => invader instanceof Monolith;
+    private isMonolith = (invader: InvaderOrUndefined): boolean => invader instanceof Monolith;
 
     private finishShooting = (): void => {
         if (this.invaders.isAllDestroyed()) {
