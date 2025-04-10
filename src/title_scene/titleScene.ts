@@ -161,7 +161,11 @@ export class TitleScene extends BaseScene<boolean> {
             label.text = `${remainigSec}`;
             label.invalidate();
         };
-        this.countdownTimer.onFinish = () => this.isFinish = true;
+        this.countdownTimer.onFinish = () => {
+            label.text = "0";
+            label.invalidate();
+            this.isFinish = true;
+        };
         return label;
     };
 
