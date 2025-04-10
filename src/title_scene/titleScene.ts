@@ -1,15 +1,12 @@
 import * as tl from "@akashic-extension/akashic-timeline";
+import { ArrayUtil } from "../common/arrayUtil";
 import { BaseScene } from "../common/baseScene";
 import { Button } from "../common/button";
 import { CountdownTimer } from "../common/countdownTimer";
 import { Background } from "../game_scene/background/background";
 import { Color } from "../game_scene/color";
-import { Explosion } from "../game_scene/effect/explosion";
-import { Splash } from "../game_scene/effect/splash";
-import { Spray } from "../game_scene/effect/spray";
 import { GameScene } from "../game_scene/gameScene";
 import { InvaderLayer } from "../game_scene/invader/invaderLayer";
-import { Bullet } from "../game_scene/tile/bullet";
 import { TileLayer } from "../game_scene/tile/tileLayer";
 import { GameMainParameterObject } from "./../parameterObject";
 
@@ -17,16 +14,10 @@ export class TitleScene extends BaseScene<boolean> {
 
     private random: g.RandomGenerator;
     private timeline: tl.Timeline;
-    private background: Background;
-    private logo: g.Sprite;
     private tiles: TileLayer;
     private invaders: InvaderLayer;
-    private effectLayer: g.E;
-    private startButton: Button;
-    private timeLabel: g.Label;
     private countdownTimer: CountdownTimer;
-    private descriptions: g.Sprite[];
-    private tweens: tl.Tween[];
+    private equals: g.Sprite;
 
     private isTouched = false;
     private isFinish = false;
@@ -35,10 +26,8 @@ export class TitleScene extends BaseScene<boolean> {
         super({
             game: g.game,
             assetIds: [
-                "img_title_logo", "img_button_start", "img_tile", "img_bullet",
-                "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith",
-                "img_splash", "img_spray", "img_destroy",
-                "img_description_01", "img_description_02",
+                "img_tile", "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith",
+                "img_description", "img_equals", "img_button_start",
                 "img_font", "font_glyphs",
             ],
         });
@@ -49,15 +38,15 @@ export class TitleScene extends BaseScene<boolean> {
     }
 
     private loadHandler = (timeLimit: number): void => {
-        this.append(this.background = new Background(this));
-        this.append(this.logo = this.createTitleLogo());
+        this.append(new Background(this));
         this.append(this.tiles = this.createTiles());
         this.append(this.invaders = this.createInvaders());
-        this.append(this.effectLayer = new g.E({ scene: this, }));
-        this.append(this.startButton = this.createStartButton());
-        this.append(this.timeLabel = this.createTimeLabel(timeLimit));
-        this.appendDescriptions();
+        this.append(this.createStartButton());
+        this.append(this.createTimeLabel(timeLimit));
+        this.append(this.createDiscription());
+        this.append(this.equals = this.createEquals(this.tiles));
 
+        this.fadeIn();
         this.onPointDownCapture.add(this.pointDownHandler);
         this.onUpdate.add(this.updateHandler);
     };
@@ -67,89 +56,40 @@ export class TitleScene extends BaseScene<boolean> {
         this.onPointDownCapture.remove(this.pointDownHandler);
     };
 
-    private updateHandler = (): void | boolean => { this.countdownTimer.update(); };
+    private updateHandler = (): void | boolean => {
+        this.countdownTimer.update();
 
-    private finishShooting = (shouldShooting = false): void => {
-        this.isFinish = true;
-        this.tweens.forEach(tween => {
-            if (!tween.isFinished()) {
-                tween.cancel();
-            }
-            tween.fadeIn(0);
+        if (this.isFinish) {
+            this.finishScene();
+            return true;
+        }
+    };
+
+    private fadeIn = (): void => {
+        this.children.forEach(e => {
+            if ((e instanceof Background)) return;
+
+            this.timeline.create(e)
+                .fadeIn(GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
         });
-        this.descriptions.forEach(description => description.hide());
-
-        this.setTimeout(() => {
-            if (shouldShooting) {
-                this.startShooting(() => this.setTimeout(this.finishScene, GameScene.ANIM_DURATION * 2));
-            } else {
-                this.setTimeout(this.finishScene, GameScene.ANIM_DURATION * 2);
-            }
-        }, GameScene.ANIM_DURATION / 3)
     };
 
     private finishScene = (): void => {
-        const createTween = (target: g.E, x: number, y: number): tl.Tween =>
-            this.timeline.create(target).moveTo(x, y, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
-
-        this.background.hideStars();
-        createTween(this.logo, this.logo.x, -this.logo.height - BaseScene.SCREEN_PADDING);
-        const destY = this.invaders.isAllDestroyed() ? -this.tiles.height / 2 : g.game.height + this.tiles.height / 2;
-        createTween(this.tiles, this.tiles.x, destY);
-        createTween(this.invaders, this.invaders.x, -(this.invaders.height + GameScene.INVADERS_OFFSET_Y));
-        createTween(this.startButton, g.game.width, this.startButton.y);
-        createTween(this.timeLabel, g.game.width, this.timeLabel.y)
-            .wait(GameScene.ANIM_DURATION * 2)
-            .call(() => this.onFinish?.(this.isTouched));
+        this.fadeOut();
+        this.setTimeout(() => {
+            this.onFinish?.(this.isTouched);
+        }, GameScene.ANIM_DURATION * 2);
     };
 
-    private startShooting = (onFinish: () => void): void => {
-        const tiles = this.tiles.getTiles();
-        tiles.forEach((tile, rowIndex) => {
-            tile.forEach((tile, columnIndex) => {
-                const tilePos = this.tiles.localToGlobal(tile);
-                const bullet = new Bullet(this, tile.color);
-                bullet.moveTo(tilePos);
-                bullet.hide();
-                this.effectLayer.append(bullet);
+    private fadeOut = (): void => {
+        this.children.forEach(e => {
+            if ((e instanceof Background)) {
+                e.hideStars();
+                return;
+            }
 
-                const tween = this.timeline.create(bullet);
-                tween.wait(GameScene.ANIM_DURATION * rowIndex)
-                    .call(() => {
-                        bullet.show();
-                        const invader = this.invaders.getVanguardInvaderOrUndefined(columnIndex);
-                        const dest = invader ?
-                            this.invaders.localToGlobal(invader) : { x: tilePos.x, y: -bullet.height / 2 };
-
-                        tween.moveY(dest.y + bullet.height / 2, Math.floor(GameScene.ANIM_DURATION / 2), tl.Easing.linear)
-                            .call(() => {
-                                bullet.destroy();
-                                if (invader) {
-                                    if (tile.color === invader.color) {
-                                        new Explosion(this, this.effectLayer, dest, tile.color);
-                                        invader.defeat();
-                                    } else {
-                                        const pos = { x: dest.x, y: dest.y + invader.height / 2 };
-                                        this.effectLayer.append(new Splash(this, tile.color, pos));
-                                        new Spray(this, this.effectLayer, pos, tile.color);
-                                    }
-                                }
-
-                                if (rowIndex === TileLayer.ROW - 1 && columnIndex === TileLayer.COLUMN - 1) {
-                                    onFinish();
-                                }
-                            })
-                    });
-
-                this.timeline.create(tile)
-                    .wait(GameScene.ANIM_DURATION * rowIndex)
-                    .call(() => {
-                        tile.scale(0.5);
-                        tile.modified();
-                    })
-                    .scaleTo(1, 1, GameScene.ANIM_DURATION / 2, tl.Easing.easeOutQuint);
-            });
-
+            this.timeline.create(e)
+                .fadeOut(GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
         });
     };
 
@@ -169,6 +109,7 @@ export class TitleScene extends BaseScene<boolean> {
         tiles.addPointHandlers();
         tiles.x = g.game.width / 2;
         tiles.y = g.game.height - tiles.height / 2 - BaseScene.SCREEN_PADDING;
+        tiles.opacity = 0;
         tiles.onStartRotation = tile => {
             this.timeline.create(tile)
                 .call(() => {
@@ -178,16 +119,23 @@ export class TitleScene extends BaseScene<boolean> {
                 .scaleTo(1, 1, 100, tl.Easing.easeOutBounce);
         };
         tiles.onRotation = () => { };
-        tiles.onFinishRotation = _hasChanged => { };
+        tiles.onFinishRotation = _hasChanged => {
+            if (ArrayUtil.equals(tiles.getReverseColors(), this.invaders.getColors())) {
+                this.equals.show();
+            } else {
+                this.equals.hide();
+            }
+        };
         return tiles;
     };
 
     private createInvaders = (): InvaderLayer => {
         const colors = this.tiles.getReverseColors();
         const invaders = new InvaderLayer(this, this.tiles.getReverseColors());
-        invaders.nextFormation(colors, this.random, false, 1);
         invaders.x = g.game.width / 2;
         invaders.y = GameScene.INVADERS_OFFSET_Y;
+        invaders.opacity = 0;
+        invaders.nextFormation(colors, this.random, false, 1);
         invaders.startAnimation();
         return invaders;
     };
@@ -203,7 +151,7 @@ export class TitleScene extends BaseScene<boolean> {
             font: bitmapFont,
             fontSize: bitmapFont.size / 2,
             text: timeLimit.toString(),
-            opacity: 0.75,
+            opacity: 0,
         });
         label.x = g.game.width - label.width - label.fontSize / 2;
         label.y = g.game.height - label.fontSize * 1.5;
@@ -213,14 +161,7 @@ export class TitleScene extends BaseScene<boolean> {
             label.text = `${remainigSec}`;
             label.invalidate();
         };
-        this.countdownTimer.onFinish = () => {
-            if (!this.isFinish) {
-                label.hide();
-                this.startButton.removeAllListener();
-                this.startButton.hide();
-                this.finishShooting();
-            }
-        };
+        this.countdownTimer.onFinish = () => this.isFinish = true;
         return label;
     };
 
@@ -228,53 +169,27 @@ export class TitleScene extends BaseScene<boolean> {
         const button = new Button(this, "img_button_start");
         button.x = g.game.width - button.width - BaseScene.SCREEN_PADDING;
         button.y = g.game.height - button.height - BaseScene.SCREEN_PADDING;
-        button.onClick = button => {
-            if (!this.countdownTimer.isFinish()) {
-                this.countdownTimer.stop();
-                button.hide();
-                this.timeLabel.hide();
-                this.finishShooting(this.countdownTimer.remainingTime >= 1);
-            }
-        };
+        button.opacity = 0;
+        button.onClick = _ => this.isFinish = true;
         return button;
     };
 
-    private appendDescriptions = (): void => {
-        const createDescription = (assetId: string): g.Sprite => {
-            const asset = this.asset.getImageById(assetId);
-            return new g.Sprite({
-                scene: this,
-                src: asset,
-                x: g.game.width,
-                y: (g.game.height - asset.height) / 2 - BaseScene.SCREEN_PADDING / 2,
-                opacity: 1,
-            });
-        }
-
-        this.descriptions = [];
-        this.tweens = [];
-
-        const first = createDescription("img_description_01");
-        this.append(first);
-        const second = createDescription("img_description_02");
-        this.append(second);
-        this.descriptions.push(first, second);
-
-        const firstTween = this.timeline.create(first)
-            .moveX((g.game.width - first.width) / 2, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
-            .wait(3000)
-            .moveX(-first.width, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
-        const secondTween = this.timeline.create(second)
-            .wait(3000 + Math.floor(GameScene.ANIM_DURATION * 1.5))
-            .moveX((g.game.width - second.width) / 2, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
-        this.tweens.push(firstTween, secondTween);
+    private createDiscription = (): g.Sprite => {
+        const description = new g.Sprite({
+            scene: this,
+            src: this.asset.getImageById("img_description"),
+            opacity: 0,
+        });
+        description.x = BaseScene.SCREEN_PADDING;
+        description.y = (g.game.height - description.height - BaseScene.SCREEN_PADDING) / 2;
+        return description;
     };
 
-    private createTitleLogo = (): g.Sprite => new g.Sprite({
+    private createEquals = (tiles: g.Pane): g.Sprite => new g.Sprite({
         scene: this,
-        src: this.asset.getImageById("img_title_logo"),
-        x: BaseScene.SCREEN_PADDING / 6,
-        y: BaseScene.SCREEN_PADDING / 2,
-        angle: -10,
+        src: this.asset.getImageById("img_equals"),
+        x: tiles.x + tiles.width / 2 + BaseScene.SCREEN_PADDING / 2,
+        y: tiles.y - tiles.height * 0.75,
+        hidden: true,
     });
 }
