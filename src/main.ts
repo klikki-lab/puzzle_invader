@@ -9,7 +9,7 @@ export function main(param: GameMainParameterObject): void {
         playThreshold: 100,
         clearThreshold: undefined,
     };
-    g.game.loadingScene = new CustomLoadingScene(100);
+    g.game.loadingScene = new CustomLoadingScene(50);
 
     const titleScene = new TitleScene(param, 9);
     titleScene.onFinish = isTouched => {
