@@ -30,6 +30,10 @@ export class TileLayer extends g.Pane {
             touchable: true,
         });
 
+        colorTable.push(...colorTable.map(row => [...row]));
+        for (let i = 0; i < TileLayer.ROW; i++) {
+            colorTable[i].push(...colorTable[i]);
+        }
         this.tiles = this.createTiles(colorTable);
     }
 

@@ -10,7 +10,7 @@ export abstract class BaseScene<T> extends g.Scene {
     public set onFinish(onFinish: (param: T) => void) { this._onFinish = onFinish; }
 
     /**
-    * 右クリックでスクリーンショットできるようにする。この処理を有効にするにはtsconfigにdomを追加すること。
+    * 開発中に右クリックでスクリーンショットできるようにする。この処理を有効にするにはtsconfigにdomを追加すること。
     */
     enableRightClickScreenshot = (): void => {
         this.onPointDownCapture.add(ev => {

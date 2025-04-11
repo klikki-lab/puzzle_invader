@@ -106,6 +106,16 @@ export class AudioController {
      */
     getMusicVolume = (assetId: string): number => this.getAudioPlayContext(assetId).volume;
 
+    // イージング関数例
+    // const volume = this.audioController.getMusicVolume(MusicId.BGM);
+    // const easing = (t: number, _b: number, _c: number, d: number) => {
+    //     const v = 1 - (t / d);
+    //     return v * volume;
+    //     or 
+    //     return v * v * v * volume;
+    //     etc...
+    // };
+
     /**
      * 指定したアセットIDのBGMをフェードアウトさせる。
      * @param assetId アセットID。
@@ -188,7 +198,7 @@ export class AudioController {
 
     private getAudioPlayContext = (assetId: string): g.AudioPlayContext => {
         const context = this.musics[assetId]?.context;
-        if (!context) new Error(`${assetId} doesn't exist.`);
+        if (!context) throw new Error(`${assetId} doesn't exist.`);
         return context;
     };
 

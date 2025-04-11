@@ -125,17 +125,12 @@ export class TitleScene extends BaseScene<boolean> {
     };
 
     private createTiles = (): TileLayer => {
-        const colorTable = [
+        const colorTable: number[][] = [
             [Color.R, Color.R, Color.R],
             [Color.Y, Color.Y, Color.Y],
             [Color.B, Color.B, Color.B]
-        ];
-
-        colorTable.push(...colorTable.map(row => [...row]));
-        for (let i = 0; i < TileLayer.ROW; i++) {
-            colorTable[i].push(...colorTable[i]);
-        }
-
+        ] as const;
+        
         const tiles = new TileLayer(this, colorTable);
         tiles.addPointHandlers();
         tiles.x = g.game.width / 2;
@@ -149,7 +144,7 @@ export class TitleScene extends BaseScene<boolean> {
                 })
                 .scaleTo(1, 1, 100, tl.Easing.easeOutBounce);
         };
-        tiles.onRotation = () => { };
+        tiles.onRotation = () => { /* do nothing here */ };
         tiles.onFinishRotation = _hasChanged => {
             if (ArrayUtil.equals(tiles.getReverseColors(), this.invaders.getColors())) {
                 this.equals.show();
@@ -162,7 +157,7 @@ export class TitleScene extends BaseScene<boolean> {
 
     private createInvaders = (): InvaderLayer => {
         const colors = this.tiles.getReverseColors();
-        const invaders = new InvaderLayer(this, this.tiles.getReverseColors());
+        const invaders = new InvaderLayer(this, colors);
         invaders.x = g.game.width / 2;
         invaders.y = GameScene.INVADERS_OFFSET_Y;
         invaders.opacity = 0;

@@ -44,7 +44,7 @@ export class GameScene extends BaseScene<void> {
 
     /** 333 ms */
     public static readonly ANIM_DURATION = Math.floor(1000 / TileLayer.ROW);
-    /** 48 px */
+    /** 48 x 1.25 px */
     public static readonly INVADERS_OFFSET_Y = BaseScene.SCREEN_PADDING * 1.25
 
     private random: g.RandomGenerator;
@@ -65,10 +65,11 @@ export class GameScene extends BaseScene<void> {
     private attempter: Attempter;
     private perfectBonus: PerfectBonus;
     private totalTimeLimit: number;
-    private monolithMessageTween?: tl.Tween;
+    private hintTween?: tl.Tween;
 
+    /** モノリスのヒントを出すべきかどうか */
     private shouldShowHint = false;
-    /** ショットを無効にすべきかどうか (ゲーム終了後は true) */
+    /** ショットを無効にするか (ゲーム終了後は`true`) */
     private disableShooting = false;
 
     constructor(param: GameMainParameterObject, isTouched: boolean, timeLimit: number) {
@@ -96,8 +97,9 @@ export class GameScene extends BaseScene<void> {
 
         this.timeline = new tl.Timeline(this);
         this.attempter = new Attempter();
-        this.attempter.onFinish = () => this.finishShooting();
+        this.attempter.onFinish = this.finishShooting;
         this.perfectBonus = new PerfectBonus(1000, timeLimit);
+        this.bitmapFont = this.createBitmapFont();
 
         this.append(this.background = new Background(this));
         this.append(this.tiles = this.createTiles());
@@ -182,7 +184,7 @@ export class GameScene extends BaseScene<void> {
         const isMonolithTurn = wave % period === 0;
 
         const { invaders, rotateResult } = this.invaders.nextFormation(reverseColors, this.random, isMonolithTurn, attemptCount);
-        // console.log(result.rotateResult.solutionSteps, result.rotateResult.retryCount);
+        // console.log(rotateResult.solutionSteps, rotateResult.retryCount);
         invaders.forEach((row, rowIndex) => {
             row.forEach((invader, columnIndex) => {
                 const y = invader.y;
@@ -284,23 +286,22 @@ export class GameScene extends BaseScene<void> {
                     this.waveLabel.nextWave();
                     this.difficultyLabel.optimalMoveCount = solutionStep;
                     this.background.finishWarp();
-                    this.prepareNextAttempt();
-                    this.tiles.isActivate = false;
+                    this.nextAttempt();
                 });
             });
 
-            if (this.monolithMessageTween && !this.monolithMessageTween.isFinished()) {
-                this.monolithMessageTween.cancel();
-                if (this.monolithMessageTween._target instanceof g.Sprite) {
-                    if (!this.monolithMessageTween._target.destroyed())
-                        this.monolithMessageTween._target.destroy();
+            if (this.hintTween && !this.hintTween.isFinished()) {
+                this.hintTween.cancel();
+                if (this.hintTween._target instanceof g.Sprite) {
+                    if (!this.hintTween._target.destroyed())
+                        this.hintTween._target.destroy();
                 }
-                this.monolithMessageTween = undefined;
+                this.hintTween = undefined;
             }
         } else {
             if (this.invaders.isMonolithTurn) {
                 this.regenerateMonolithAnimation(() => {
-                    this.prepareNextAttempt();
+                    this.nextAttempt();
                     this.tiles.isActivate = false;
 
                     if (this.waveLabel.wave <= 6 && !this.shouldShowHint) {
@@ -310,16 +311,16 @@ export class GameScene extends BaseScene<void> {
                 });
             } else {
                 if (this.attempter.isAllIncorrect()) {
-                    this.prepareNextAttempt();
+                    this.nextAttempt();
                 } else {
-                    this.showShootingResult(this.prepareNextAttempt);
+                    this.showShootingResult(this.nextAttempt);
                 }
                 this.tiles.isActivate = false;
             }
         }
     };
 
-    private prepareNextAttempt = (): void => {
+    private nextAttempt = (): void => {
         this.attempter.nextAttempt();
         this.fireButton.show();
     };
@@ -360,7 +361,7 @@ export class GameScene extends BaseScene<void> {
         message.x = this.invaders.x - this.invaders.width / 2 - message.width - BaseScene.SCREEN_PADDING;
         message.y = this.invaders.y + this.invaders.height / 2 - message.height;
 
-        this.monolithMessageTween = this.timeline.create(message)
+        this.hintTween = this.timeline.create(message)
             .fadeIn(GameScene.ANIM_DURATION)
             .wait(3000)
             .fadeOut(GameScene.ANIM_DURATION)
@@ -440,10 +441,6 @@ export class GameScene extends BaseScene<void> {
             [Color.Y, Color.Y, Color.Y],
             [Color.B, Color.B, Color.B],
         ] as const;
-        colorTable.push(...colorTable.map(row => [...row]));
-        for (let i = 0; i < TileLayer.ROW; i++) {
-            colorTable[i].push(...colorTable[i]);
-        }
 
         const tiles = new TileLayer(this, colorTable);
         tiles.x = g.game.width / 2;
@@ -483,14 +480,14 @@ export class GameScene extends BaseScene<void> {
         button.x = right + (g.game.width - right) / 2 - button.width / 2;
         button.opacity = 0.9;
         button.hide();
-        button.onPressed = (_button => this.audioController.playSound(SoundId.CLICK));
+        button.onPressed = _button => this.audioController.playSound(SoundId.CLICK);
         button.onClick = (button => {
             if (!this.tiles.isSwiping && !this.tiles.isActivate) {
                 this.audioController.playSound(SoundId.CLICK);
 
                 button.hide();
                 this.tiles.isActivate = true;
-                // 時間終了までにクリックすれば、そのショットは有効
+                // 時間切れまでに発射したショットは有効
                 if (!this.disableShooting && this.countdownTimer.isFinish()) {
                     this.disableShooting = true;
                 }
@@ -501,28 +498,23 @@ export class GameScene extends BaseScene<void> {
     };
 
     private createHudLayer = (timeLimit: number): g.E => {
-        this.bitmapFont = new g.BitmapFont({
-            src: this.asset.getImageById("img_font"),
-            glyphInfo: this.asset.getJSONContentById("font_glyphs"),
-        });
-
         const layer = new g.E({ scene: this });
 
         const fontSize = this.bitmapFont.size;
-        const padding = fontSize / 2;
+        const margin = fontSize / 2;
 
         this.scoreLabel = new ScoreLabel(this, this.bitmapFont, fontSize, 0);
-        this.scoreLabel.x = g.game.width - this.scoreLabel.width - padding;
-        this.scoreLabel.y = padding;
+        this.scoreLabel.x = g.game.width - this.scoreLabel.width - margin;
+        this.scoreLabel.y = margin;
         layer.append(this.scoreLabel);
 
         this.timeLabel = new TimeLabel(this, this.bitmapFont, fontSize, timeLimit);
-        this.timeLabel.x = padding;
-        this.timeLabel.y = padding;
+        this.timeLabel.x = margin;
+        this.timeLabel.y = margin;
         layer.append(this.timeLabel);
 
         this.difficultyLabel = new DifficultyLabel(this, this.bitmapFont, fontSize / 2);
-        this.difficultyLabel.x = g.game.width - this.difficultyLabel.width - padding;
+        this.difficultyLabel.x = g.game.width - this.difficultyLabel.width - margin;
         this.difficultyLabel.y = this.timeLabel.y + this.timeLabel.height + this.difficultyLabel.height * 2.5;
         this.difficultyLabel.opacity = 0.5;
         layer.append(this.difficultyLabel);
@@ -555,6 +547,10 @@ export class GameScene extends BaseScene<void> {
         anchorY: 0.5,
     });
 
+    private createBitmapFont = (): g.BitmapFont => new g.BitmapFont({
+        src: this.asset.getImageById("img_font"),
+        glyphInfo: this.asset.getJSONContentById("font_glyphs"),
+    });
 
     private createAudioController = (musicVolume: number, soundVolume: number, disable: boolean): AudioController => {
         const audioController = new AudioController(musicVolume, soundVolume, disable);
