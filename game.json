@@ -426,19 +426,19 @@
 		"img_description_01": {
 			"type": "image",
 			"path": "image/img_description_01.png",
-			"width": 366,
+			"width": 353,
 			"height": 92
 		},
 		"img_description_02": {
 			"type": "image",
 			"path": "image/img_description_02.png",
-			"width": 401,
+			"width": 420,
 			"height": 91
 		},
 		"img_description_03": {
 			"type": "image",
 			"path": "image/img_description_03.png",
-			"width": 256,
+			"width": 291,
 			"height": 90
 		}
 	},
