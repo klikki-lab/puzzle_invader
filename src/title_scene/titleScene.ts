@@ -130,19 +130,17 @@ export class TitleScene extends BaseScene<boolean> {
             [Color.Y, Color.Y, Color.Y],
             [Color.B, Color.B, Color.B]
         ] as const;
-        
+
         const tiles = new TileLayer(this, colorTable);
         tiles.addPointHandlers();
         tiles.x = g.game.width / 2;
         tiles.y = g.game.height - tiles.height / 2 - BaseScene.SCREEN_PADDING;
         tiles.opacity = 0;
         tiles.onStartRotation = tile => {
+            tile.scale(0.8);
+            tile.modified();
             this.timeline.create(tile)
-                .call(() => {
-                    tile.scale(0.9);
-                    tile.modified();
-                })
-                .scaleTo(1, 1, 100, tl.Easing.easeOutBounce);
+                .scaleTo(1, 1, GameScene.ANIM_DURATION / 3, tl.Easing.easeOutQuint);
         };
         tiles.onRotation = () => { /* do nothing here */ };
         tiles.onFinishRotation = _hasChanged => {
