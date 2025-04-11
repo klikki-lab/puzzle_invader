@@ -176,7 +176,7 @@ export class TileLayer extends g.Pane {
         if (this.isSwiping) {
             this.finishRotation(ev.point);
             this.tiles.forEach(row => row.forEach(tiles => tiles.deactivate()));
-            this._onFinishRotation(this.hasCangedColors());
+            this._onFinishRotation(this.hasChangedColors());
         }
     };
 
@@ -314,7 +314,7 @@ export class TileLayer extends g.Pane {
         }
     };
 
-    private hasCangedColors = (): boolean => {
+    private hasChangedColors = (): boolean => {
         if (!this.copies) return false;
 
         if (this.copies.length <= 0 ||
