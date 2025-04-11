@@ -407,12 +407,6 @@
 			"width": 243,
 			"height": 47
 		},
-		"img_description": {
-			"type": "image",
-			"path": "image/img_description.png",
-			"width": 361,
-			"height": 426
-		},
 		"arrayUtil": {
 			"type": "script",
 			"path": "script/common/arrayUtil.js",
@@ -428,6 +422,24 @@
 			"type": "script",
 			"path": "script/game_scene/invader/invader.js",
 			"global": true
+		},
+		"img_description_01": {
+			"type": "image",
+			"path": "image/img_description_01.png",
+			"width": 366,
+			"height": 92
+		},
+		"img_description_02": {
+			"type": "image",
+			"path": "image/img_description_02.png",
+			"width": 401,
+			"height": 91
+		},
+		"img_description_03": {
+			"type": "image",
+			"path": "image/img_description_03.png",
+			"width": 256,
+			"height": 90
 		}
 	},
 	"moduleMainScripts": {

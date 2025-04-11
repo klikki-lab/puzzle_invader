@@ -14,6 +14,7 @@ export class TitleScene extends BaseScene<boolean> {
 
     private random: g.RandomGenerator;
     private timeline: tl.Timeline;
+    private tweens: tl.Tween[] = [];
     private tiles: TileLayer;
     private invaders: InvaderLayer;
     private countdownTimer: CountdownTimer;
@@ -27,8 +28,8 @@ export class TitleScene extends BaseScene<boolean> {
             game: g.game,
             assetIds: [
                 "img_tile", "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith",
-                "img_description", "img_equals", "img_button_start",
-                "img_font", "font_glyphs",
+                "img_description_01", "img_description_02", "img_description_03",
+                "img_equals", "img_button_start", "img_font", "font_glyphs",
             ],
         });
 
@@ -43,8 +44,25 @@ export class TitleScene extends BaseScene<boolean> {
         this.append(this.invaders = this.createInvaders());
         this.append(this.createStartButton());
         this.append(this.createTimeLabel(timeLimit));
-        this.append(this.createDiscription());
+        const d1 = this.createDescription1();
+        const d2 = this.createDescription2();
+        const d3 = this.createDescription3();
+        this.append(d1);
+        this.append(d2);
+        this.append(d3);
         this.append(this.equals = this.createEquals(this.tiles));
+
+        const duration = Math.floor(GameScene.ANIM_DURATION / 2);
+        const tween1 = this.timeline.create(d1)
+            .wait(250)
+            .fadeIn(duration, tl.Easing.easeOutQuint);
+        const tween2 = this.timeline.create(d2)
+            .wait(2000)
+            .fadeIn(duration, tl.Easing.easeOutQuint);
+        const tween3 = this.timeline.create(d3)
+            .wait(5000)
+            .fadeIn(duration, tl.Easing.easeOutQuint);
+        this.tweens.push(tween1, tween2, tween3);
 
         this.fadeIn();
         this.onPointDownCapture.add(this.pointDownHandler);
@@ -68,14 +86,27 @@ export class TitleScene extends BaseScene<boolean> {
     private fadeIn = (): void => {
         this.children.forEach(e => {
             if ((e instanceof Background)) return;
+            if (this.isDescription(e)) return;
 
             this.timeline.create(e)
                 .fadeIn(GameScene.ANIM_DURATION, tl.Easing.easeOutQuint);
         });
     };
 
+    private isDescription = (e: g.E): boolean => {
+        if ((e instanceof g.Sprite)) {
+            const asset = e.src as g.ImageAsset;
+            return (asset.id).indexOf("img_description_") === 0;
+        }
+        return false;
+    };
+
     private finishScene = (): void => {
+        for (const tween of this.tweens) {
+            if (!tween.isFinished()) tween.cancel();
+        }
         this.fadeOut();
+
         this.setTimeout(() => {
             this.onFinish?.(this.isTouched);
         }, GameScene.ANIM_DURATION * 2);
@@ -178,16 +209,34 @@ export class TitleScene extends BaseScene<boolean> {
         return button;
     };
 
-    private createDiscription = (): g.Sprite => {
-        const description = new g.Sprite({
-            scene: this,
-            src: this.asset.getImageById("img_description"),
-            opacity: 0,
-        });
-        description.x = BaseScene.SCREEN_PADDING;
-        description.y = (g.game.height - description.height - BaseScene.SCREEN_PADDING) / 2;
-        return description;
+    private createDescription1 = (): g.Sprite => {
+        const description = this.createDescription("img_description_01");
+        description.x = (this.invaders.x - this.invaders.width / 2) / 2;
+        description.y = BaseScene.SCREEN_PADDING * .25 + this.invaders.height / 2;
+        return description
     };
+
+    private createDescription2 = (): g.Sprite => {
+        const description = this.createDescription("img_description_02");
+        description.x = (this.tiles.x - this.tiles.width / 2) / 2;
+        description.y = this.tiles.y - this.tiles.height / 2 + description.height / 2;
+        return description
+    };
+
+    private createDescription3 = (): g.Sprite => {
+        const description = this.createDescription("img_description_03");
+        description.x = (this.tiles.x - this.tiles.width / 2) / 2;
+        description.y = this.tiles.y + description.height;
+        return description
+    };
+
+    private createDescription = (assetId: string): g.Sprite => new g.Sprite({
+        scene: this,
+        src: this.asset.getImageById(assetId),
+        anchorX: 0.5,
+        anchorY: 0.5,
+        opacity: 0,
+    });
 
     private createEquals = (tiles: g.Pane): g.Sprite => new g.Sprite({
         scene: this,
