@@ -178,10 +178,10 @@ export class GameScene extends BaseScene<void> {
         const period = TileLayer.ROW;
         const attemptCount = calcAttemptCount(wave, period);
         const isMonolithTurn = wave % period === 0;
-        
-        const result = this.invaders.nextFormation(reverseColors, this.random, isMonolithTurn, attemptCount);
+
+        const { invaders, rotateResult } = this.invaders.nextFormation(reverseColors, this.random, isMonolithTurn, attemptCount);
         // console.log(result.rotateResult.solutionSteps, result.rotateResult.retryCount);
-        result.invaders.forEach((row, rowIndex) => {
+        invaders.forEach((row, rowIndex) => {
             row.forEach((invader, columnIndex) => {
                 const y = invader.y;
                 this.timeline.create(invader)
@@ -199,7 +199,7 @@ export class GameScene extends BaseScene<void> {
                     .moveY(y, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
                     .call(() => {
                         if (0 === rowIndex && 0 === columnIndex) {
-                            onFinishInvadeAnim(result.rotateResult.solutionSteps.length);
+                            onFinishInvadeAnim(rotateResult.solutionSteps.length);
                         }
                     });
             });
