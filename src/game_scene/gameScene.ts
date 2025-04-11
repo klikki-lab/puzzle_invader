@@ -230,10 +230,11 @@ export class GameScene extends BaseScene<void> {
 
                         bullet.show();
                         const invader = this.invaders.getVanguardInvaderOrUndefined(columnIndex);
-                        const dest = invader ?
+                        const target = invader ?
                             this.invaders.localToGlobal(invader) : { x: tilePos.x, y: -bullet.height / 2 };
+                        const offset = invader ? (invader.height + bullet.height) / 2 : 0;
 
-                        tween.moveY(dest.y + bullet.height / 2, Math.floor(GameScene.ANIM_DURATION * 0.5), tl.Easing.linear)
+                        tween.moveY(target.y + offset, Math.floor(GameScene.ANIM_DURATION / 2))
                             .call(() => {
                                 bullet.destroy();
                                 if (!invader) {
@@ -241,7 +242,7 @@ export class GameScene extends BaseScene<void> {
                                 } else if (tile.color === invader.getColor()) {
                                     const soundId = this.isMonolith(invader) ? SoundId.DESTROY_MONOLITH : SoundId.DESTROY;
                                     this.audioController.playSound(soundId);
-                                    new Explosion(this, this.effectLayer, dest, tile.color);
+                                    new Explosion(this, this.effectLayer, target, tile.color);
                                     invader.defeat();
 
                                     this.timeline.create(invader)
@@ -253,7 +254,7 @@ export class GameScene extends BaseScene<void> {
 
                                 } else {
                                     this.audioController.playSound(SoundId.SPLASH);
-                                    const pos = { x: dest.x, y: dest.y + invader.height / 2 };
+                                    const pos = { x: target.x, y: target.y + invader.height / 2 };
                                     this.effectLayer.append(new Splash(this, tile.color, pos));
                                     new Spray(this, this.effectLayer, pos, tile.color);
                                     this.attempter.incorrect();
