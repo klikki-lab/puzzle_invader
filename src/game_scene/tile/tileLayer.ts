@@ -86,9 +86,9 @@ export class TileLayer extends g.Pane {
         this._isActivate = isActivate;
         this.tiles.forEach(row => row.forEach(tile => {
             if (isActivate) {
-                tile.diactivate();
-            } else {
                 tile.activate();
+            } else {
+                tile.deactivate();
             }
         }));
     }
@@ -175,7 +175,7 @@ export class TileLayer extends g.Pane {
 
         if (this.isSwiping) {
             this.finishRotation(ev.point);
-            this.tiles.forEach(row => row.forEach(tiles => tiles.activate()));
+            this.tiles.forEach(row => row.forEach(tiles => tiles.deactivate()));
             this._onFinishRotation(this.hasCangedColors());
         }
     };

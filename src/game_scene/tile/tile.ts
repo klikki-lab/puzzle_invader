@@ -1,17 +1,17 @@
 import { TileLayer } from "./tileLayer";
 
-type StatusType = "ACTIVATE" | "DIACTTIVATE";
+type StatusType = "ACTIVATE" | "DEACTIVATE";
 type StatusValue = 0 | 1;
 
 const Status: Record<StatusType, StatusValue> = {
-    ACTIVATE: 0,
-    DIACTTIVATE: 1,
+    ACTIVATE: 1,
+    DEACTIVATE: 0,
 } as const;
 
 export class Tile extends g.Sprite {
 
     private static readonly STATUS_DIVISION = 3;
-    private status: StatusValue = Status.ACTIVATE;
+    private status: StatusValue = Status.DEACTIVATE;
 
     constructor(scene: g.Scene, private _color: number) {
         const src = scene.asset.getImageById("img_tile");
@@ -42,10 +42,10 @@ export class Tile extends g.Sprite {
         this.switchColor();
     };
 
-    diactivate = (): void => {
-        if (this.status === Status.DIACTTIVATE) return;
+    deactivate = (): void => {
+        if (this.status === Status.DEACTIVATE) return;
 
-        this.status = Status.DIACTTIVATE;
+        this.status = Status.DEACTIVATE;
         this.switchColor();
     };
 
