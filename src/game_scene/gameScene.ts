@@ -174,11 +174,11 @@ export class GameScene extends BaseScene<void> {
         };
 
         const reverseColors = this.tiles.getReverseColors();
-        const wave = this.waveLabel.wave;
+        const wave = this.waveLabel.wave + 1;
         const period = TileLayer.ROW;
-        const isMonolithTurn = wave > 0 && wave % period === 0;
         const attemptCount = calcAttemptCount(wave, period);
-
+        const isMonolithTurn = wave % period === 0;
+        
         const result = this.invaders.nextFormation(reverseColors, this.random, isMonolithTurn, attemptCount);
         // console.log(result.rotateResult.solutionSteps, result.rotateResult.retryCount);
         result.invaders.forEach((row, rowIndex) => {
