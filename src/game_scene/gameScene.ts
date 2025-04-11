@@ -285,6 +285,7 @@ export class GameScene extends BaseScene<void> {
                     this.difficultyLabel.optimalMoveCount = solutionStep;
                     this.background.finishWarp();
                     this.prepareNextAttempt();
+                    this.tiles.isActivate = false;
                 });
             });
 
@@ -300,6 +301,7 @@ export class GameScene extends BaseScene<void> {
             if (this.invaders.isMonolithTurn) {
                 this.regenerateMonolithAnimation(() => {
                     this.prepareNextAttempt();
+                    this.tiles.isActivate = false;
 
                     if (this.waveLabel.wave <= 6 && !this.shouldShowHint) {
                         this.shouldShowHint = true;
@@ -312,6 +314,7 @@ export class GameScene extends BaseScene<void> {
                 } else {
                     this.showShootingResult(this.prepareNextAttempt);
                 }
+                this.tiles.isActivate = false;
             }
         }
     };
@@ -319,7 +322,6 @@ export class GameScene extends BaseScene<void> {
     private prepareNextAttempt = (): void => {
         this.attempter.nextAttempt();
         this.fireButton.show();
-        this.tiles.isActivate = false;
     };
 
     private regenerateMonolithAnimation = (onFinishAnim: () => void): void => {
