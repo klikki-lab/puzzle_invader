@@ -6,7 +6,7 @@ export class Spray {
         for (let i = 0; i < count; i++) {
             const fragment = new Fragment(scene, pos, color);
             const radian = Math.PI / 180 * (g.game.random.generate() * 160 + 10);
-            const radius = fragment.width / 2 + fragment.width * g.game.random.generate();
+            const radius = fragment.width / 4 + fragment.width * g.game.random.generate();
             fragment.velocity.x = Math.cos(radian) * radius;
             fragment.velocity.y = Math.sin(radian) * radius;
             parent.append(fragment);
@@ -27,32 +27,31 @@ class Fragment extends g.Sprite {
             srcX: color * width,
             width: width,
             x: pos.x,
-            y: pos.y,
+            y: pos.y + src.height / 2,
             anchorX: .5,
             anchorY: .5,
-            angle: g.game.random.generate() * 360,
         });
 
         this.onUpdate.add(() => {
             this.x += this.velocity.x;
             this.y += this.velocity.y;
-            this.modified();
 
             const vx = Math.abs(this.velocity.x);
             const vy = Math.abs(this.velocity.y);
-            if (vx > 0.1) {
-                this.velocity.x *= 0.7;
+            if (vx > 1) {
+                this.velocity.x *= 0.8;
             }
-            if (vy > 0.1) {
-                this.velocity.y *= 0.7;
+            if (vy > 1) {
+                this.velocity.y *= 0.8;
             }
-
-            if (vx < 0.2 && vy < 0.2) {
+            if (vx < 3 && vy < 3) {
                 this.scale(this.scaleX * 0.7);
+                this.modified();
                 if (this.scaleX < 0.1) {
                     this.destroy();
                 }
             }
+            this.modified();
         });
     }
 }
