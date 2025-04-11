@@ -53,16 +53,12 @@ export class TitleScene extends BaseScene<boolean> {
         this.append(this.equals = this.createEquals(this.tiles));
 
         const duration = Math.floor(GameScene.ANIM_DURATION / 2);
-        const tween1 = this.timeline.create(d1)
-            .wait(250)
-            .fadeIn(duration, tl.Easing.easeOutQuint);
-        const tween2 = this.timeline.create(d2)
-            .wait(2000)
-            .fadeIn(duration, tl.Easing.easeOutQuint);
-        const tween3 = this.timeline.create(d3)
-            .wait(5000)
-            .fadeIn(duration, tl.Easing.easeOutQuint);
-        this.tweens.push(tween1, tween2, tween3);
+        const createTween = (description: g.Sprite, wait: number): tl.Tween => this.timeline.create(description)
+            .wait(wait)
+            .fadeIn(duration, tl.Easing.easeOutQuint)
+            .con()
+            .scaleTo(1, 1, duration, tl.Easing.easeOutQuint);
+        this.tweens.push(createTween(d1, 250), createTween(d2, 2000), createTween(d3, 5000));
 
         this.fadeIn();
         this.onPointDownCapture.add(this.pointDownHandler);
@@ -228,6 +224,8 @@ export class TitleScene extends BaseScene<boolean> {
         src: this.asset.getImageById(assetId),
         anchorX: 0.5,
         anchorY: 0.5,
+        scaleX: 1.25,
+        scaleY: 1.25,
         opacity: 0,
     });
 
