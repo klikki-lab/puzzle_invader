@@ -135,7 +135,9 @@ export class GameScene extends BaseScene<void> {
             this.onUpdate.add(this.updateHandler);
 
             this.timeline.create(start)
-                .moveY(-start.height, GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
+                .scaleTo(1.5, 0, GameScene.ANIM_DURATION / 2, tl.Easing.easeOutQuint)
+                .con()
+                .fadeOut(GameScene.ANIM_DURATION, tl.Easing.easeOutQuint)
                 .call(() => {
                     this.audioController.playMusic(MusicId.BGM);
                     start.destroy();
