@@ -1,12 +1,14 @@
 export class Spray {
 
-    private static readonly MAX_NUM = 5;
+    private static readonly MAX_NUM = 4;
 
     constructor(scene: g.Scene, parent: g.Scene | g.E, pos: g.CommonOffset, color: number, count = Spray.MAX_NUM) {
         for (let i = 0; i < count; i++) {
             const fragment = new Fragment(scene, pos, color);
-            const radian = Math.PI / 180 * (g.game.random.generate() * 160 + 10);
-            const radius = fragment.width / 4 + fragment.width * g.game.random.generate();
+            const scale = g.game.random.generate() + 1;
+            fragment.scale(scale);
+            const radian = Math.PI / 180 * (g.game.random.generate() * 120 + 30);
+            const radius = fragment.width * (1.75 - scale / 2);
             fragment.velocity.x = Math.cos(radian) * radius;
             fragment.velocity.y = Math.sin(radian) * radius;
             parent.append(fragment);
@@ -39,15 +41,14 @@ class Fragment extends g.Sprite {
             const vx = Math.abs(this.velocity.x);
             const vy = Math.abs(this.velocity.y);
             if (vx > 1) {
-                this.velocity.x *= 0.8;
+                this.velocity.x *= 0.75;
             }
             if (vy > 1) {
-                this.velocity.y *= 0.8;
+                this.velocity.y *= 0.75;
             }
             if (vx < 3 && vy < 3) {
                 this.scale(this.scaleX * 0.7);
-                this.modified();
-                if (this.scaleX < 0.1) {
+                if (this.scaleX < 0.01) {
                     this.destroy();
                 }
             }
