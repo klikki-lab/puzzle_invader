@@ -246,7 +246,7 @@ export class GameScene extends BaseScene<void> {
                                     invader.defeat();
 
                                     this.timeline.create(invader)
-                                        .scaleTo(0, 0, GameScene.ANIM_DURATION / 3, tl.Easing.easeOutQuint)
+                                        .scaleTo(0, 0, GameScene.ANIM_DURATION / 3, tl.Easing.easeInQuint)
                                         .call(() => {
                                             invader.hide();
                                             this.attempter.correct();
