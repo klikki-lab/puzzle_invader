@@ -9,7 +9,8 @@ export class TileLayer extends g.Pane {
     private static readonly SWIPE_THRESHOLD = TileLayer.SIZE / 10;
 
     private _onStartRotation: (tile: Tile) => void;
-    private _onRotation: () => void;
+    private _onDecideRotation: (tiles: Tile[]) => void;
+    private _onRotating: () => void;
     private _onFinishRotation: (hasChanged: boolean) => void;
 
     private tiles: Tile[][] = [];
@@ -78,6 +79,9 @@ export class TileLayer extends g.Pane {
         .map(row => row.slice(0, TileLayer.COLUMN))
         .map(row => row.map(tile => tile.color));
 
+    deactivateAllTiles = (): void =>
+        this.tiles.forEach(rows => rows.forEach(tile => tile.deactivate()));
+
     get isSwiping(): boolean { return this._isSwiping; }
 
     set isActivate(isActivate: boolean) {
@@ -95,7 +99,9 @@ export class TileLayer extends g.Pane {
 
     set onStartRotation(callback: (tile: Tile) => void) { this._onStartRotation = callback; }
 
-    set onRotation(callback: () => void) { this._onRotation = callback; }
+    set onDecideRotation(callback: (tiles: Tile[]) => void) { this._onDecideRotation = callback; }
+
+    set onRotation(callback: () => void) { this._onRotating = callback; }
 
     set onFinishRotation(callback: (hasChanged: boolean) => void) { this._onFinishRotation = callback; }
 
@@ -128,7 +134,7 @@ export class TileLayer extends g.Pane {
     };
 
     private pointMoveHandler = (ev: g.PointMoveEvent) => {
-        if (this.isActivate) {
+        if (this._isActivate) {
             if (this.isSwiping) this.finishRotation(ev.point);
             return;
         };
@@ -144,6 +150,9 @@ export class TileLayer extends g.Pane {
             this.isStartSwipe = false;
             this._isSwiping = true;
 
+            const tiles = this.isHorizontalSwipe ?
+                this.getRowTiles(this.getRowIndex(ev.point.y)) : this.getColumnTiles(this.getColumnIndex(ev.point.x));
+            this._onDecideRotation(tiles);
         }
         if (!this._isSwiping) return;
 
@@ -155,7 +164,7 @@ export class TileLayer extends g.Pane {
             this.prev.x += ev.prevDelta.x;
             if (Math.abs(this.prev.x) > TileLayer.SWIPE_THRESHOLD * 2) {
                 this.prev.x = 0;
-                this._onRotation();
+                this._onRotating();
             }
         } else {
             const columnIndex = this.getColumnIndex(ev.point.x);
@@ -165,20 +174,23 @@ export class TileLayer extends g.Pane {
             this.prev.y += ev.prevDelta.y;
             if (Math.abs(this.prev.y) > TileLayer.SWIPE_THRESHOLD * 2) {
                 this.prev.y = 0;
-                this._onRotation();
+                this._onRotating();
             }
         }
     };
 
     private pointUpHandler = (ev: g.PointUpEvent): void => {
-        if (this.isActivate) return;
+        if (this._isActivate) return;
 
         if (this.isSwiping) {
             this.finishRotation(ev.point);
-            this.tiles.forEach(row => row.forEach(tiles => tiles.deactivate()));
-            this._onFinishRotation(this.hasChangedColors());
         }
+        this._onFinishRotation(this.hasChangedColors());
     };
+
+    private getRowTiles = (rowIndex: number): Tile[] => this.tiles[rowIndex];
+
+    private getColumnTiles = (columnIndex: number): Tile[] => this.tiles.map(row => row[columnIndex]);
 
     private getRowIndex = (ey: number): number =>
         Math.max(0, Math.min(Math.floor(ey / TileLayer.SIZE), TileLayer.COLUMN - 1));

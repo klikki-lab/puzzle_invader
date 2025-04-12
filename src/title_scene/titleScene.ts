@@ -133,13 +133,16 @@ export class TitleScene extends BaseScene<boolean> {
         tiles.y = g.game.height - tiles.height / 2 - BaseScene.SCREEN_PADDING;
         tiles.opacity = 0;
         tiles.onStartRotation = tile => {
+            tile.activate();
             tile.scale(0.8);
             tile.modified();
             this.timeline.create(tile)
                 .scaleTo(1, 1, GameScene.ANIM_DURATION / 3, tl.Easing.easeOutQuint);
         };
+        tiles.onDecideRotation = tiles => tiles.forEach(tile => tile.activate());
         tiles.onRotation = () => { /* do nothing here */ };
         tiles.onFinishRotation = _hasChanged => {
+            tiles.deactivateAllTiles();
             if (ArrayUtil.equals(tiles.getReverseColors(), this.invaders.getColors())) {
                 this.equals.show();
             } else {

@@ -448,16 +448,17 @@ export class GameScene extends BaseScene<void> {
         tiles.y = g.game.height + tiles.height / 2;
         tiles.onStartRotation = tile => {
             this.audioController.playSound(SoundId.CLICK);
+            tile.activate();
             tile.scale(0.8);
             tile.modified();
             this.timeline.create(tile)
                 .scaleTo(1, 1, GameScene.ANIM_DURATION / 3, tl.Easing.easeOutQuint);
         };
-        tiles.onRotation = () => {
-            this.audioController.playSound(SoundId.NOTCH);
-        };
+        tiles.onDecideRotation = tiles => tiles.forEach(tile => tile.activate());
+        tiles.onRotation = () => this.audioController.playSound(SoundId.NOTCH);
         tiles.onFinishRotation = hasChanged => {
             this.audioController.playSound(SoundId.CLICK);
+            tiles.deactivateAllTiles();
             if (hasChanged) {
                 this.difficultyLabel.attempt++;
             }
