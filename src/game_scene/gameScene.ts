@@ -77,7 +77,7 @@ export class GameScene extends BaseScene<void> {
             game: g.game,
             assetIds: [
                 "img_tile", "img_bullet", "img_button_fire", "img_splash", "img_spray", "img_destroy",
-                "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith", "img_monolith_message",
+                "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith", "img_monolith_hint",
                 "img_start", "img_finish", "img_font", "font_glyphs",
                 MusicId.BGM, SoundId.NOTCH, SoundId.CLICK, SoundId.PRESSED_BUTTON,
                 SoundId.SHOT, SoundId.WARP, SoundId.PERFECT,
@@ -356,7 +356,7 @@ export class GameScene extends BaseScene<void> {
         const message = new g.Sprite({
             scene: this,
             parent: this.hudLayer,
-            src: this.asset.getImageById("img_monolith_message"),
+            src: this.asset.getImageById("img_monolith_hint"),
             opacity: 0,
         });
         message.x = this.invaders.x - this.invaders.width / 2 - message.width - BaseScene.SCREEN_PADDING;
