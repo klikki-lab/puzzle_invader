@@ -58,7 +58,7 @@ export class TitleScene extends BaseScene<boolean> {
             .fadeIn(duration, tl.Easing.easeOutQuint)
             .con()
             .scaleTo(1, 1, duration, tl.Easing.easeOutQuint);
-        this.tweens.push(createTween(d1, 250), createTween(d2, 2000), createTween(d3, 5000));
+        this.tweens.push(createTween(d1, 200), createTween(d2, 2000), createTween(d3, 5000));
 
         this.fadeIn();
         this.onPointDownCapture.add(this.pointDownHandler);
