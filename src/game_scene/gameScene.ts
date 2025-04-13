@@ -458,7 +458,7 @@ export class GameScene extends BaseScene<void> {
         tiles.onRotation = () => this.audioController.playSound(SoundId.NOTCH);
         tiles.onFinishRotation = hasChanged => {
             this.audioController.playSound(SoundId.CLICK);
-            tiles.deactivateAllTiles();
+            tiles.deactivateAll();
             if (hasChanged) {
                 this.difficultyLabel.attempt++;
             }

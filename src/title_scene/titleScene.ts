@@ -142,7 +142,7 @@ export class TitleScene extends BaseScene<boolean> {
         tiles.onDecideRotation = tiles => tiles.forEach(tile => tile.activate());
         tiles.onRotation = () => { /* do nothing here */ };
         tiles.onFinishRotation = _hasChanged => {
-            tiles.deactivateAllTiles();
+            tiles.deactivateAll();
             if (ArrayUtil.equals(tiles.getReverseColors(), this.invaders.getColors())) {
                 this.equals.show();
             } else {

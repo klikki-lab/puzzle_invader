@@ -79,8 +79,7 @@ export class TileLayer extends g.Pane {
         .map(row => row.slice(0, TileLayer.COLUMN))
         .map(row => row.map(tile => tile.color));
 
-    deactivateAllTiles = (): void =>
-        this.tiles.forEach(rows => rows.forEach(tile => tile.deactivate()));
+    deactivateAll = (): void => this.tiles.forEach(rows => rows.forEach(tile => tile.deactivate()));
 
     get isSwiping(): boolean { return this._isSwiping; }
 
