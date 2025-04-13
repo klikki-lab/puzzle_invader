@@ -41,12 +41,6 @@
 			"width": 182,
 			"height": 36
 		},
-		"img_spray": {
-			"type": "image",
-			"path": "image/img_spray.png",
-			"width": 28,
-			"height": 8
-		},
 		"img_destroy": {
 			"type": "image",
 			"path": "image/img_destroy.png",
