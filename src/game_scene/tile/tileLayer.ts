@@ -50,26 +50,6 @@ export class TileLayer extends g.Pane {
         this.onPointUp.remove(this.pointUpHandler);
     };
 
-    _resetColors = (colors: number[][]): void => {
-        this.tiles.forEach((row, rowIndex) => {
-            row.forEach((tile, columnIndex) => {
-                tile.color = colors[rowIndex][columnIndex];
-                tile.modified();
-            });
-        });
-        this.copyAll();
-        this.copies = this.getColors();
-    };
-
-    _getTileParams = (): { pos: g.CommonOffset, color: number }[][] => this.tiles.slice(0, TileLayer.ROW)
-        .map(row => row.slice(0, TileLayer.COLUMN))
-        .map(row => row.map(tile => {
-            return {
-                pos: this.localToGlobal(tile),
-                color: tile.color,
-            };
-        }));
-
     getTiles = (): Tile[][] => this.tiles.slice(0, TileLayer.ROW).map(row => row.slice(0, TileLayer.COLUMN));
 
     getColors = (): number[][] => this.getTiles().map(row => row.map(tile => tile.color));
