@@ -284,6 +284,7 @@ export class GameScene extends BaseScene<void> {
                 this.tiles.isActivate = false;
 
                 this.invadeAnimation(solutionStep => {
+                    this.perfectBonus.setRemainingTime(this.countdownTimer.remainingTime);
                     this.waveLabel.nextWave();
                     this.difficultyLabel.optimalMoveCount = solutionStep;
                     this.background.finishWarp();

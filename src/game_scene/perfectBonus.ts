@@ -10,10 +10,11 @@ export class PerfectBonus {
 
     getScore = (remainingSec: number): number => {
         const diff = this.remainingSec - remainingSec;
-        this.remainingSec = remainingSec;
 
         const rate = 1 - (diff / this.totalSec);
         const rounded = Math.round(rate * 100) / 100;
         return Math.floor(this.baseScore * rounded);
     };
+
+    setRemainingTime = (remainingSec: number) => { this.remainingSec = remainingSec; };
 }
