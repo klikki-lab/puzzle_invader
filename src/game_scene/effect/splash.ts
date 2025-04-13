@@ -21,7 +21,7 @@ export class Splash extends g.Sprite {
             if (life < maxFrame) {
                 life++;
             } else {
-                this.scaleY *= 0.5;
+                this.scaleY *= 0.4;
                 if (this.scaleY < 0.1) {
                     this.destroy();
                     return true;

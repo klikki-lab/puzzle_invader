@@ -76,7 +76,7 @@ export class GameScene extends BaseScene<void> {
         super({
             game: g.game,
             assetIds: [
-                "img_tile", "img_bullet", "img_button_fire", "img_splash", "img_spray", "img_destroy",
+                "img_tile", "img_bullet", "img_button_fire", "img_splash", "img_destroy",
                 "img_alien", "img_alien_arm", "img_alien_leg", "img_monolith", "img_monolith_hint",
                 "img_start", "img_finish", "img_font", "font_glyphs",
                 MusicId.BGM, SoundId.NOTCH, SoundId.CLICK, SoundId.PRESSED_BUTTON,
@@ -255,8 +255,8 @@ export class GameScene extends BaseScene<void> {
                                 } else {
                                     this.audioController.playSound(SoundId.SPLASH);
                                     const pos = { x: target.x, y: target.y + invader.height / 2 };
-                                    this.effectLayer.append(new Splash(this, tile.color, pos));
                                     new Spray(this, this.effectLayer, pos, tile.color);
+                                    this.effectLayer.append(new Splash(this, tile.color, pos));
                                     this.attempter.incorrect();
                                 }
                             });
