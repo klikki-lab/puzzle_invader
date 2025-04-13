@@ -11,9 +11,11 @@ export class Spray {
             fragment.scale(scale);
             const radian = Math.PI / 180 * (g.game.random.generate() * 120 + 30);
             const radius = (fragment.width * scale) * (1 - scale / 1);
-            fragment.velocity.x = Math.cos(radian) * radius;
-            fragment.velocity.y = Math.sin(radian) * radius;
-            fragment.angle = MathUtil.getAngle(fragment.velocity.x, fragment.velocity.y, 0, 0) - 90;
+            const dx = Math.cos(radian) * radius;
+            const dy = Math.sin(radian) * radius;
+            fragment.velocity.x = dx;
+            fragment.velocity.y = dy;
+            fragment.angle = MathUtil.getAngle(dx, dy, 0, 0) - 90;
             parent.append(fragment);
         }
     }
