@@ -306,12 +306,10 @@ export class TileLayer extends g.Pane {
     };
 
     private hasChangedColors = (): boolean => {
-        if (!this.copies) return false;
-
-        if (this.copies.length <= 0 ||
+        if (!this.copies ||
+            this.copies.length <= 0 ||
             this.copies.length > TileLayer.ROW ||
             this.copies[0].length > TileLayer.COLUMN) return false;
-
 
         for (let i = 0; i < TileLayer.ROW; i++) {
             for (let j = 0; j < TileLayer.COLUMN; j++) {
