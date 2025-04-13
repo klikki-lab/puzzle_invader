@@ -440,6 +440,11 @@
 			"path": "image/img_monolith_hint.png",
 			"width": 195,
 			"height": 67
+		},
+		"mathUitl": {
+			"type": "script",
+			"path": "script/common/mathUitl.js",
+			"global": true
 		}
 	},
 	"moduleMainScripts": {
