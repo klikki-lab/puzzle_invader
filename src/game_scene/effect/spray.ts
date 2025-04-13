@@ -15,7 +15,7 @@ export class Spray {
             const dy = Math.sin(radian) * radius;
             fragment.velocity.x = dx;
             fragment.velocity.y = dy;
-            fragment.angle = MathUtil.getAngle(dx, dy, 0, 0) - 90;
+            fragment.angle = MathUtil.getAngle(dx, dy) - 90;
             parent.append(fragment);
         }
     }
