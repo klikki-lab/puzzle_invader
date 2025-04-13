@@ -9,7 +9,7 @@ export class TileLayer extends g.Pane {
     private static readonly SWIPE_THRESHOLD = TileLayer.SIZE / 10;
 
     private _onStartRotation: (tile: Tile) => void;
-    private _onDecideRotation: (tiles: Tile[]) => void;
+    private _onDecideOrientation: (tiles: Tile[]) => void;
     private _onRotating: () => void;
     private _onFinishRotation: (hasChanged: boolean) => void;
 
@@ -99,7 +99,7 @@ export class TileLayer extends g.Pane {
 
     set onStartRotation(callback: (tile: Tile) => void) { this._onStartRotation = callback; }
 
-    set onDecideRotation(callback: (tiles: Tile[]) => void) { this._onDecideRotation = callback; }
+    set onDecideRotation(callback: (tiles: Tile[]) => void) { this._onDecideOrientation = callback; }
 
     set onRotation(callback: () => void) { this._onRotating = callback; }
 
@@ -152,7 +152,7 @@ export class TileLayer extends g.Pane {
 
             const tiles = this.isHorizontalSwipe ?
                 this.getRowTiles(this.getRowIndex(ev.point.y)) : this.getColumnTiles(this.getColumnIndex(ev.point.x));
-            this._onDecideRotation(tiles);
+            this._onDecideOrientation(tiles);
         }
         if (!this._isSwiping) return;
 
