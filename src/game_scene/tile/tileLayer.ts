@@ -2,7 +2,6 @@ import { Tile } from "./tile";
 
 export class TileLayer extends g.Pane {
 
-    public static readonly DIVISION = 3;
     public static readonly ROW = 3;
     public static readonly COLUMN = 3;
     public static readonly SIZE = 96;

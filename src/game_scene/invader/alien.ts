@@ -1,4 +1,4 @@
-import { TileLayer } from "../tile/tileLayer";
+import { Tile } from "../tile/tile";
 import { Invader } from "./invader";
 
 export class Alien extends Invader {
@@ -26,7 +26,7 @@ export class Alien extends Invader {
     private createArms = (scene: g.Scene, color: number): void => {
         const createArm = (color: number): g.Sprite => {
             const src = scene.asset.getImageById("img_alien_arm");
-            const width = Math.floor(src.width / TileLayer.DIVISION);
+            const width = Math.floor(src.width / Tile.DIVISION);
             const arm = new g.Sprite({
                 scene: scene,
                 src: src,
@@ -59,7 +59,7 @@ export class Alien extends Invader {
     private createLegs = (scene: g.Scene, color: number): void => {
         const createLeg = (color: number): g.Sprite => {
             const src = scene.asset.getImageById("img_alien_leg");
-            const width = Math.floor(src.width / TileLayer.DIVISION);
+            const width = Math.floor(src.width / Tile.DIVISION);
             const leg = new g.Sprite({
                 scene: scene,
                 src: src,

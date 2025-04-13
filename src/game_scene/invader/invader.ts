@@ -1,4 +1,4 @@
-import { TileLayer } from "../tile/tileLayer";
+import { Tile } from "../tile/tile";
 
 export abstract class Invader extends g.Sprite {
 
@@ -9,7 +9,7 @@ export abstract class Invader extends g.Sprite {
         super({
             scene: scene,
             src: src,
-            width: Math.floor(src.width / TileLayer.DIVISION),
+            width: Math.floor(src.width / Tile.DIVISION),
             anchorX: 0.5,
             anchorY: 0.5,
         });

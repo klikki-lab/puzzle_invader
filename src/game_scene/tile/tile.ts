@@ -1,4 +1,3 @@
-import { TileLayer } from "./tileLayer";
 
 type StatusType = "ACTIVATE" | "DEACTIVATE";
 type StatusValue = 0 | 1;
@@ -10,6 +9,7 @@ const Status: Record<StatusType, StatusValue> = {
 
 export class Tile extends g.Sprite {
 
+    public static readonly DIVISION = 3;
     private static readonly STATUS_DIVISION = 3;
     private status: StatusValue = Status.DEACTIVATE;
 
@@ -18,7 +18,7 @@ export class Tile extends g.Sprite {
         super({
             scene: scene,
             src: src,
-            width: Math.floor(src.width / (TileLayer.DIVISION + Tile.STATUS_DIVISION)),
+            width: Math.floor(src.width / (Tile.DIVISION + Tile.STATUS_DIVISION)),
             anchorX: 0.5,
             anchorY: 0.5,
         });
