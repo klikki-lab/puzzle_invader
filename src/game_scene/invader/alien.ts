@@ -76,11 +76,12 @@ export class Alien extends Invader {
             return leg;
         };
 
+        const offsetX = 8 * 2;
         const left = createLeg(color);
-        left.x = this.width / 2 + 8 * 2;
+        left.x = this.width / 2 + offsetX;
 
         const right = createLeg(color);
-        right.x = this.width / 2 - 8 * 2;
+        right.x = this.width / 2 - offsetX;
         right.scaleX = -1;
 
         this.append(left);
