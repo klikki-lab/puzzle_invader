@@ -88,7 +88,7 @@ export class GameScene extends BaseScene<void> {
 
         // this.enableRightClickScreenshot();
         this.random = param.random || g.game.random;
-        this.totalTimeLimit = param.sessionParameter?.totalTimeLimit ?? 80;
+        this.totalTimeLimit = param.sessionParameter?.totalTimeLimit ?? 140;
         this.onLoad.add(() => this.loadHandler(timeLimit, isTouched));
     }
 
