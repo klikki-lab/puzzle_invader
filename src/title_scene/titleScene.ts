@@ -104,7 +104,7 @@ export class TitleScene extends BaseScene<boolean> {
         this.fadeOut();
 
         this.setTimeout(() => {
-            this.onFinish?.(this.isTouched);
+            this._onFinish?.(this.isTouched);
         }, GameScene.ANIM_DURATION * 2);
     };
 
