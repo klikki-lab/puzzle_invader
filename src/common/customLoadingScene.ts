@@ -50,14 +50,14 @@ export class CustomLoadingScene extends g.LoadingScene {
             pane.append(rect);
             this.append(pane);
 
-            const laodingNow = new g.Sprite({
+            const loadingNow = new g.Sprite({
                 scene: this,
                 src: this.asset.getImageById("img_loading_now"),
                 anchorX: 0.5,
                 anchorY: 0.5,
             });
-            laodingNow.moveTo(pane.x, pane.y - pane.height / 2 - laodingNow.height);
-            this.append(laodingNow);
+            loadingNow.moveTo(pane.x, pane.y - pane.height / 2 - loadingNow.height);
+            this.append(loadingNow);
 
             const progress = (): void => {
                 const rate = this.getTargetWaitingAssetsCount() / this.waitingAssetCount;
@@ -74,8 +74,8 @@ export class CustomLoadingScene extends g.LoadingScene {
                 pane.y = g.game.height - alien.height * 0.75;
                 pane.modified();
 
-                laodingNow.opacity = 1;
-                laodingNow.modified();
+                loadingNow.opacity = 1;
+                loadingNow.modified();
 
                 this.waitingAssetCount = this.getTargetWaitingAssetsCount();
             });
@@ -85,7 +85,7 @@ export class CustomLoadingScene extends g.LoadingScene {
             this.onTargetReady.add(_scene => {
                 progress();
 
-                this.timeline.create(laodingNow)
+                this.timeline.create(loadingNow)
                     .fadeOut(fadeOutDuration, tl.Easing.easeInCubic);
 
                 this.timeline.create(pane)
