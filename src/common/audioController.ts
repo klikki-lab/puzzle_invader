@@ -136,7 +136,7 @@ export class AudioController {
      * @returns AudioTransitionContext (=> {@link g.AudioTransitionContext})
      */
     fadeInMusic = (assetId: string, duration: number, to: number = 1, easing?: g.EasingFunction): g.AudioTransitionContext =>
-        g.AudioUtil.fadeIn(g.game, this.getAudioPlayContext(assetId), duration, Math.max(0, Math.min(to, 1)), easing);
+        g.AudioUtil.fadeIn(g.game, this.getAudioPlayContext(assetId), duration, this.clamp(to), easing);
 
     /**
      * SEを追加する。
