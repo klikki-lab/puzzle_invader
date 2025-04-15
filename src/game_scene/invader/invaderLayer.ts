@@ -3,10 +3,10 @@ import { Alien } from "./alien";
 import { Invader } from "./invader";
 import { Monolith } from "./monolith";
 
-type Rotation = "horizontal" | "vertical";
+type Orinentation = "horizontal" | "vertical";
 
 type SolutionStep = {
-    orientation: Rotation;
+    orientation: Orinentation;
     index: number;
     step: number;
 };
